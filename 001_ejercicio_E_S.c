@@ -21,10 +21,15 @@ int es_nombre_valido(const char *nombre)
     for (int i = 0; nombre[i] != '\0'; i++)
     {
         if (!isspace((unsigned char)nombre[i]))
+        // Usando isspace para detectar espacios, tabulaciones, etc.
+
         {
             if (!isalpha((unsigned char)nombre[i]))
             {
-                // Encontró un carácter que no es letra ni espacio
+                /*
+                Si el carácter no es una letra (isalpha),
+                devuelve 0 porque hay un carácter inválido
+                 */
                 return 0;
             }
             else
