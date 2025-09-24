@@ -415,3 +415,8 @@ int main()
 
     return 0;
 }
+
+/* Solo permite modificar todos los campos de la persona, podria personalizar
+y que permita que campo elegir, y no tener que cargar los datos completos.
+En cuanto a modular el codigo lo ire haciendo para llegar lo mas prolijo al
+sabado*/
