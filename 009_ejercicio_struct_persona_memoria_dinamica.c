@@ -200,3 +200,5 @@ int main()
 
     return 0;
 }
+
+// Practica de pasar a memoria dinamica el codigo de estatica
