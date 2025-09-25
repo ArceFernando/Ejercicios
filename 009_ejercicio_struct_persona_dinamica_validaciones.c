@@ -11,8 +11,11 @@
 #define MAX_MATERIA_NOMBRE 30
 #define ARCHIVO_PERSONAS "personas.txt"
 
+int ultimoID = 0; // ID incremental global
+
 typedef struct
 {
+    int id; // Identificador único
     char nombre[MAX_NOMBRE];
     char apellido[MAX_APELLIDO];
     int edad;
@@ -121,6 +124,8 @@ Persona *crearPersona()
         return NULL;
     }
 
+    p->id = ++ultimoID;
+
     leerCadenaSoloLetras(p->nombre, MAX_NOMBRE, "Nombre: ");
     leerCadenaSoloLetras(p->apellido, MAX_APELLIDO, "Apellido: ");
     p->edad = leerEdad("Edad (0 - 120): ");
@@ -143,9 +148,7 @@ Persona *crearPersona()
     }
 
     for (int i = n; i < MAX_MATERIAS; i++)
-    {
         p->materias[i][0] = '\0';
-    }
 
     return p;
 }
@@ -158,7 +161,7 @@ void modificarPersona(Persona *p)
         return;
     }
 
-    printf("Modificando persona:\n");
+    printf("Modificando persona (ID %d):\n", p->id);
     leerCadenaSoloLetras(p->nombre, MAX_NOMBRE, "Nuevo nombre: ");
     leerCadenaSoloLetras(p->apellido, MAX_APELLIDO, "Nuevo apellido: ");
     p->edad = leerEdad("Nueva edad (0 - 120): ");
@@ -195,6 +198,7 @@ void mostrarPersona(const Persona *p, int indice)
     }
 
     printf("Persona %d:\n", indice + 1);
+    printf("  ID: %d\n", p->id);
     printf("  Nombre: %s %s\n", p->nombre, p->apellido);
     printf("  Edad: %d\n", p->edad);
     printf("  Carrera: %s\n", p->carrera);
@@ -228,19 +232,18 @@ void guardarEnArchivo(Persona *personas[], int total)
     {
         if (personas[i])
         {
+            fprintf(f, "ID: %d\n", personas[i]->id);
             fprintf(f, "%s\n%s\n%d\n%s\n", personas[i]->nombre, personas[i]->apellido, personas[i]->edad, personas[i]->carrera);
 
             int count = 0;
             for (int j = 0; j < MAX_MATERIAS; j++)
-            {
                 if (personas[i]->materias[j][0] != '\0')
                     count++;
-            }
+
             fprintf(f, "Materias: %d\n", count);
             for (int j = 0; j < count; j++)
-            {
                 fprintf(f, "%s\n", personas[i]->materias[j]);
-            }
+
             fprintf(f, "---\n");
         }
     }
@@ -267,13 +270,21 @@ void cargarDesdeArchivo(Persona *personas[], int total)
         if (!p)
             break;
 
+        sscanf(buffer, "ID: %d", &p->id);
+        if (p->id > ultimoID)
+            ultimoID = p->id;
+
+        fgets(buffer, sizeof(buffer), f);
         buffer[strcspn(buffer, "\n")] = '\0';
         strncpy(p->nombre, buffer, MAX_NOMBRE);
+
         fgets(buffer, sizeof(buffer), f);
         buffer[strcspn(buffer, "\n")] = '\0';
         strncpy(p->apellido, buffer, MAX_APELLIDO);
+
         fgets(buffer, sizeof(buffer), f);
         p->edad = atoi(buffer);
+
         fgets(buffer, sizeof(buffer), f);
         buffer[strcspn(buffer, "\n")] = '\0';
         strncpy(p->carrera, buffer, MAX_CARRERA);
@@ -281,8 +292,10 @@ void cargarDesdeArchivo(Persona *personas[], int total)
         fgets(buffer, sizeof(buffer), f);
         int numMaterias = 0;
         sscanf(buffer, "Materias: %d", &numMaterias);
+
         for (int i = 0; i < MAX_MATERIAS; i++)
             p->materias[i][0] = '\0';
+
         for (int i = 0; i < numMaterias && i < MAX_MATERIAS; i++)
         {
             fgets(buffer, sizeof(buffer), f);
@@ -290,7 +303,7 @@ void cargarDesdeArchivo(Persona *personas[], int total)
             strncpy(p->materias[i], buffer, MAX_MATERIA_NOMBRE - 1);
         }
 
-        fgets(buffer, sizeof(buffer), f); // separador "---"
+        fgets(buffer, sizeof(buffer), f); // separador ---
         personas[index++] = p;
     }
 
@@ -335,7 +348,7 @@ int main()
             else
             {
                 personas[i] = crearPersona();
-                printf("Persona creada.\n");
+                printf("Persona creada con ID %d.\n", personas[i]->id);
             }
             break;
         }
@@ -415,8 +428,3 @@ int main()
 
     return 0;
 }
-
-/* Solo permite modificar todos los campos de la persona, podria personalizar
-y que permita que campo elegir, y no tener que cargar los datos completos.
-En cuanto a modular el codigo lo ire haciendo para llegar lo mas prolijo al
-sabado*/
