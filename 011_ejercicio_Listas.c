@@ -159,7 +159,7 @@ void obtenerElemento(Nodo *cabeza, int n)
     {
         if (i == n)
         {
-            printf("Elemento en posición %d: ", n);
+            printf("Elemento en posicion %d: ", n);
             imprimirNodo(cabeza);
             printf("\n");
             return;
