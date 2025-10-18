@@ -1,7 +1,7 @@
-// funciones.c
 #include "funciones_Listas.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 Nodo *crearLista()
 {
@@ -11,6 +11,11 @@ Nodo *crearLista()
 void *crearDatoInt(int valor)
 {
     int *p = malloc(sizeof(int));
+    if (!p)
+    {
+        perror("No se pudo asignar memoria");
+        exit(EXIT_FAILURE);
+    }
     *p = valor;
     return p;
 }
@@ -18,6 +23,11 @@ void *crearDatoInt(int valor)
 void *crearDatoFloat(float valor)
 {
     float *p = malloc(sizeof(float));
+    if (!p)
+    {
+        perror("No se pudo asignar memoria");
+        exit(EXIT_FAILURE);
+    }
     *p = valor;
     return p;
 }
@@ -25,6 +35,11 @@ void *crearDatoFloat(float valor)
 void *crearDatoChar(char valor)
 {
     char *p = malloc(sizeof(char));
+    if (!p)
+    {
+        perror("No se pudo asignar memoria");
+        exit(EXIT_FAILURE);
+    }
     *p = valor;
     return p;
 }
@@ -32,6 +47,11 @@ void *crearDatoChar(char valor)
 void *crearDatoStruct(MiEstructura valor)
 {
     MiEstructura *p = malloc(sizeof(MiEstructura));
+    if (!p)
+    {
+        perror("No se pudo asignar memoria");
+        exit(EXIT_FAILURE);
+    }
     *p = valor;
     return p;
 }
@@ -39,6 +59,12 @@ void *crearDatoStruct(MiEstructura valor)
 Nodo *agregarElemento(Nodo *cabeza, TipoDato tipo, void *dato)
 {
     Nodo *nuevo = malloc(sizeof(Nodo));
+    if (!nuevo)
+    {
+        perror("No se pudo asignar memoria para el nodo");
+        exit(EXIT_FAILURE);
+    }
+
     nuevo->tipo = tipo;
     nuevo->dato = dato;
     nuevo->siguiente = NULL;
