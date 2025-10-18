@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "funciones_Listas.h"
+#include "funciones_Listas_Puntero_a_Puntero.h"
 
 int main()
 {
@@ -24,7 +24,7 @@ int main()
         switch (opcion)
         {
         case 1:
-            liberarLista(lista);
+            liberarLista(&lista); // para usar puntero a puntero
             lista = crearLista();
             printf("Lista inicializada.\n");
             break;
@@ -42,7 +42,7 @@ int main()
                 printf("Ingrese entero: ");
                 scanf("%d", &v);
                 limpiarBuffer();
-                lista = agregarElemento(lista, TIPO_INT, crearDatoInt(v));
+                agregarElemento(&lista, TIPO_INT, crearDatoInt(v));
             }
             else if (tipo == 'f')
             {
@@ -50,7 +50,7 @@ int main()
                 printf("Ingrese float: ");
                 scanf("%f", &v);
                 limpiarBuffer();
-                lista = agregarElemento(lista, TIPO_FLOAT, crearDatoFloat(v));
+                agregarElemento(&lista, TIPO_FLOAT, crearDatoFloat(v));
             }
             else if (tipo == 'c')
             {
@@ -58,7 +58,7 @@ int main()
                 printf("Ingrese char: ");
                 scanf(" %c", &v);
                 limpiarBuffer();
-                lista = agregarElemento(lista, TIPO_CHAR, crearDatoChar(v));
+                agregarElemento(&lista, TIPO_CHAR, crearDatoChar(v));
             }
             else if (tipo == 's')
             {
@@ -69,7 +69,7 @@ int main()
                 printf("Ingrese nombre (sin espacios): ");
                 scanf("%19s", s.nombre);
                 limpiarBuffer();
-                lista = agregarElemento(lista, TIPO_STRUCT, crearDatoStruct(s));
+                agregarElemento(&lista, TIPO_STRUCT, crearDatoStruct(s));
             }
             else
             {
@@ -80,12 +80,12 @@ int main()
             int tipoLista = detectarTipoLista(lista);
             if (tipoLista == TIPO_INT)
             {
-                lista = ordenarEnteros(lista, 1);
+                ordenarEnteros(lista, 1); // ya no retorna, solo modifica
                 printf("Lista ordenada automaticamente (enteros ascendentes).\n");
             }
             else if (tipoLista == TIPO_FLOAT)
             {
-                lista = ordenarFloats(lista, 1);
+                ordenarFloats(lista, 1);
                 printf("Lista ordenada automaticamente (floats ascendentes).\n");
             }
 
@@ -103,7 +103,7 @@ int main()
                 limpiarBuffer();
                 if (ord == 1 || ord == 2)
                 {
-                    lista = ordenarEnteros(lista, ord == 1);
+                    ordenarEnteros(lista, ord == 1);
                     printf("Lista ordenada.\n");
                 }
                 else
@@ -113,7 +113,7 @@ int main()
             }
             else
             {
-                printf("No se puede ordenar: lista vacía o con tipos no enteros.\n");
+                printf("No se puede ordenar: lista vacia o con tipos no enteros.\n");
             }
             break;
         }
@@ -138,7 +138,7 @@ int main()
             printf("Ingrese posicion a eliminar: ");
             scanf("%d", &pos);
             limpiarBuffer();
-            lista = eliminarElemento(lista, pos);
+            eliminarElemento(&lista, pos);
             break;
         }
 
@@ -147,13 +147,14 @@ int main()
             break;
 
         case 0:
-            liberarLista(lista);
+            liberarLista(&lista);
             printf("Saliendo...\n");
             break;
 
         default:
             printf("Opción invalida.\n");
         }
+
     } while (opcion != 0);
 
     return 0;
