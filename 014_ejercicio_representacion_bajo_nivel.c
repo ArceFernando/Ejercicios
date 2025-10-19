@@ -20,6 +20,8 @@ void mostrar_bytes(void *ptr, size_t size)
     printf("\n");
 }
 
+// punteros tipo unsigned char* para leer byte por byte la memoria
+
 int main()
 {
     // Tipos atómicos
